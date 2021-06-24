@@ -137,7 +137,9 @@ def main():
         scheduler.step()
 
     if args.save_model:
-        save_path = args.results_path / os.environ.get("NEURO_JOB_ID") / "mnist_cnn.pt"
+        save_folder: Path = args.results_path / os.environ.get("NEURO_JOB_ID")
+        save_folder.mkdir(exist_ok=True)
+        save_path = save_folder / "mnist_cnn.pt"
         torch.save(model.state_dict(), save_path)
 
 

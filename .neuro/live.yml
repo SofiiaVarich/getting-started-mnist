@@ -36,10 +36,13 @@ jobs:
       - $[[ volumes.results.ref_rw ]]
     env:
       PYTHONPATH: $[[ volumes.code.mount ]]
+    params:
+      epochs: "3"
     bash: |
         python -u $[[ volumes.code.mount ]]/train.py \
           --save-model --results-path $[[ volumes.results.mount ]] \
-          --data-folder $[[ volumes.data.mount ]]
+          --data-folder $[[ volumes.data.mount ]] \
+          --epochs $[[ params.epochs ]]
 
   filebrowser:
     action: gh:neuro-actions/filebrowser@v1.0.0
