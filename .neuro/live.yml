@@ -1,0 +1,47 @@
+kind: live
+title: getting-started-mnist
+
+defaults:
+  preset: gpu-rg
+  life_span: 1d
+
+volumes:
+  code:
+    remote: storage:$[[ flow.project_id ]]/modules
+    mount: /project/modules
+    local: modules
+  data:
+    remote: storage:$[[ flow.project_id ]]/data
+    mount: /project/data
+    local: data
+  notebooks:
+    remote: storage:$[[ flow.project_id ]]/notebooks
+    mount: /project/notebooks
+    local: notebooks
+  results:
+    remote: storage:$[[ flow.project_id ]]/results
+    mount: /project/results
+    local: results
+  project:
+    remote: storage:$[[ flow.project_id ]]
+    mount: /project
+    local: .
+
+jobs:
+  train:
+    image: neuromation/base:v1.7.11
+    volumes:
+      - $[[ upload(volumes.code).ref_ro ]]
+      - $[[ volumes.data.ref_rw ]]
+      - $[[ volumes.results.ref_rw ]]
+    env:
+      PYTHONPATH: $[[ volumes.code.mount ]]
+    bash: |
+        python -u $[[ volumes.code.mount ]]/train.py \
+          --save-model --results-path $[[ volumes.results.mount ]] \
+          --data-folder $[[ volumes.data.mount ]]
+
+  filebrowser:
+    action: gh:neuro-actions/filebrowser@v1.0.0
+    args:
+      volumes_project_remote: $[[ volumes.project.remote ]]
