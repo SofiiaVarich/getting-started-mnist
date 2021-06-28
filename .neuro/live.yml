@@ -2,7 +2,7 @@ kind: live
 title: getting-started-mnist
 
 defaults:
-  preset: gpu-k80-small  # gpu-rg
+  preset: gpu-rg
   life_span: 1d
 
 volumes:
@@ -37,6 +37,7 @@ jobs:
     image: neuromation/base:v1.7.11
     volumes:
       - $[[ upload(volumes.code).ref_ro ]]
+      - $[[ upload(volumes.config).ref_ro ]]
       - $[[ volumes.data.ref_rw ]]
       - $[[ volumes.results.ref_rw ]]
     env:
