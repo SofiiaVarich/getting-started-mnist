@@ -3,6 +3,8 @@ from pathlib import Path
 import torch
 import torch.nn.functional as F
 
+from config.paths import DATA_DIR, RESULTS_DIR
+
 
 def train(args, model, device, train_loader, optimizer, epoch):
     model.train()
@@ -62,8 +64,8 @@ def get_parser():
                         help='how many batches to wait before logging training status')
     parser.add_argument('--save-model', action='store_true', default=False,
                         help='For Saving the current Model')
-    parser.add_argument('--results-path', default=Path('.'), type=Path,
+    parser.add_argument('--results-path', default=RESULTS_DIR, type=Path,
                         help='Where to save the results')
-    parser.add_argument('--data-folder', default=Path('.'), type=Path,
+    parser.add_argument('--data-folder', default=DATA_DIR, type=Path,
                         help='Where to save the dataset')
     return parser
