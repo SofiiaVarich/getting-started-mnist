@@ -10,6 +10,11 @@ volumes:
     remote: storage:$[[ flow.project_id ]]/modules
     mount: /project/modules
     local: modules
+  config:
+    remote: storage:$[[ flow.project_id ]]/config
+    mount: /project/config
+    local: config
+    read_only: True
   data:
     remote: storage:$[[ flow.project_id ]]/data
     mount: /project/data
@@ -32,10 +37,11 @@ jobs:
     image: neuromation/base:v1.7.11
     volumes:
       - $[[ upload(volumes.code).ref_ro ]]
+      - $[[ upload(volumes.config).ref_ro ]]
       - $[[ volumes.data.ref_rw ]]
       - $[[ volumes.results.ref_rw ]]
     env:
-      PYTHONPATH: $[[ volumes.code.mount ]]
+      PYTHONPATH: $[[ volumes.project.mount ]]
     params:
       epochs: "3"
     bash: |
@@ -48,3 +54,13 @@ jobs:
     action: gh:neuro-actions/filebrowser@v1.0.0
     args:
       volumes_project_remote: $[[ volumes.project.remote ]]
+
+  jupyter:
+    action: gh:neuro-actions/jupyter@master
+    args:
+      image: neuromation/base:v1.7.11
+      volumes_data_remote: $[[ volumes.data.remote ]]
+      volumes_code_remote: $[[ upload(volumes.code).remote ]]
+      volumes_config_remote: $[[ upload(volumes.config).remote ]]
+      volumes_notebooks_remote: $[[ upload(volumes.notebooks).remote ]]
+      volumes_results_remote: $[[ volumes.results.remote ]]
