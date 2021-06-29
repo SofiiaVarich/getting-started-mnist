@@ -60,7 +60,7 @@ jobs:
     args:
       image: neuromation/base:v1.7.11
       volumes_data_remote: $[[ volumes.data.remote ]]
-      volumes_code_remote: $[[ volumes.code.remote ]]
-      volumes_config_remote: $[[ volumes.config.remote ]]
+      volumes_code_remote: $[[ upload(volumes.code).remote ]]
+      volumes_config_remote: $[[ upload(volumes.config).remote ]]
       volumes_notebooks_remote: $[[ volumes.notebooks.remote ]]
       volumes_results_remote: $[[ volumes.results.remote ]]
